@@ -3,17 +3,24 @@ import threading
 import argparse
 
 # Cara Kerja:
-# Jika memiliki Python2 dan Python3: python3 rekam.py -n nama_berkas (tanpa ekstensi dll)
-# Jika hanya memiliki Python3: python rekam.py -n nama_berkas (tanpa ekstensi dll)
+# Jika memiliki Python2 dan Python3: python3 rekam.py -n nama_berkas (tanpa ekstensi dll) -k jumlah kamera
+# Jika hanya memiliki Python3: python rekam.py -n nama_berkas (tanpa ekstensi dll) -k jumlah kamera
+# Jika ingin menggunakan mode timelapse: tambahkan perintah -m t 
+# Jika ingin menggunakan mode slowmotion: tambahkan perintah -m s
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-n", "--namaberkas", required=True, help="Nama Berkas Video Luaran Program")
 ap.add_argument("-k", "--jmlkamera", required=True, help="Jumlah Kamera yang Digunakan")
-ap.add_argument("-f", "--fps", required=True, help="Nilai FPS yang Digunakan")
+ap.add_argument("-m", "--mode", required=False, default=30, help="Mode TimeLapse/SlowMotion")
 args = vars(ap.parse_args())
 nm = args["namaberkas"]
 jk = int(args["jmlkamera"])
-fps = int(args["fps"])
+if args["mode"] == "t":
+    fps = 120
+elif args["mode"] == "s":
+    fps = 10
+else:
+    fps = int(args["mode"])
 
 class camThread(threading.Thread):
     def __init__(self, previewName, camID):
