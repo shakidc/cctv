@@ -13,7 +13,7 @@ pip install --editable .
 # Simple Recording
 
 ```shell
-mcam rec -n example-name
+mcam rec example-name
 ```
 
 ## Help

@@ -1,6 +1,8 @@
 import cv2
 import threading
 import time
+import os
+import os.path
 
 
 class camThread(threading.Thread):
@@ -22,15 +24,22 @@ def printf(*text):
 
 def camPreview(previewName, camID, fps, filename):
     nm = filename
+    if(not os.path.isdir(nm)):
+        os.mkdir(nm)
     cv2.namedWindow(previewName)
-    cam = cv2.VideoCapture(camID)
+    cam = cv2.VideoCapture(camID, cv2.CAP_DSHOW)
     if cam.isOpened():
         rval, frame = cam.read()
     else:
         rval = False
     frame_width = int(cam.get(3))
     frame_height = int(cam.get(4))
-    out = cv2.VideoWriter(nm + str(camID) + '.avi', cv2.VideoWriter_fourcc(*"MJPG"), fps, (frame_width, frame_height))
+    out = cv2.VideoWriter(
+        "%s/%s_%03i.avi" % (nm, nm, camID),
+        cv2.VideoWriter_fourcc(*"MJPG"),
+        fps,
+        (frame_width, frame_height)
+    )
     start_rec = time.time()
     while rval:
         cv2.imshow(previewName, frame)
