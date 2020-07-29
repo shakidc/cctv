@@ -9,9 +9,11 @@ import argparse
 ap = argparse.ArgumentParser()
 ap.add_argument("-n", "--namaberkas", required=True, help="Nama Berkas Video Luaran Program")
 ap.add_argument("-k", "--jmlkamera", required=True, help="Jumlah Kamera yang Digunakan")
+ap.add_argument("-f", "--fps", required=True, help="Nilai FPS yang Digunakan")
 args = vars(ap.parse_args())
 nm = args["namaberkas"]
 jk = int(args["jmlkamera"])
+fps = int(args["fps"])
 
 class camThread(threading.Thread):
     def __init__(self, previewName, camID):
@@ -22,7 +24,7 @@ class camThread(threading.Thread):
         print("Mulai " + self.previewName)
         camPreview(self.previewName, self.camID)
 
-def camPreview(previewName, camID, nm=nm):
+def camPreview(previewName, camID, nm=nm, fps=fps):
     cv2.namedWindow(previewName)
     cam = cv2.VideoCapture(camID)
     if cam.isOpened():
@@ -31,7 +33,7 @@ def camPreview(previewName, camID, nm=nm):
         rval = False
     frame_width = int(cam.get(3))
     frame_height = int(cam.get(4))
-    out = cv2.VideoWriter(nm+str(camID)+'.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 30, (frame_width,frame_height))
+    out = cv2.VideoWriter(nm+str(camID)+'.avi',cv2.VideoWriter_fourcc('M','J','P','G'), fps, (frame_width,frame_height))
     while rval:
         cv2.imshow(previewName, frame)
         rval, frame = cam.read()
